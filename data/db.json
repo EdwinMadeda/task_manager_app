@@ -1,0 +1,67 @@
+{
+  "tasks": [
+    {
+      "id": 47,
+      "text": "Cook Breakfast",
+      "day": "2022-11-08T00:23",
+      "reminder": true,
+      "durationHrs": 0,
+      "durationMin": 0,
+      "subtasks": [],
+      "dependencies": [
+        48
+      ]
+    },
+    {
+      "id": 48,
+      "text": "Morning exercise ",
+      "day": "2022-12-24T03:00:39.422Z",
+      "reminder": true,
+      "durationHrs": 0,
+      "durationMin": 20,
+      "priority": "1",
+      "subtasks": [
+        {
+          "id": 2,
+          "text": "Frog jump",
+          "day": "2022-12-30T06:01:40.588Z",
+          "reminder": false,
+          "durationHrs": 0,
+          "durationMin": 0
+        },
+        {
+          "id": 1,
+          "text": "Hop step and jump",
+          "day": "2022-12-30T06:01:25.535Z",
+          "reminder": false,
+          "durationHrs": 0,
+          "durationMin": 0
+        }
+      ],
+      "dependencies": [
+        {
+          "id": 3,
+          "text": "Fetch exercise pants",
+          "day": "2022-12-27T10:59:10.635Z",
+          "reminder": true,
+          "durationHrs": 0,
+          "durationMin": 0,
+          "priority": null,
+          "subtasks": []
+        },
+        47,
+        3
+      ]
+    },
+    {
+      "id": 3,
+      "text": "Fetch exercise pants",
+      "day": "2022-12-27T10:59:10.635Z",
+      "reminder": true,
+      "durationHrs": 0,
+      "durationMin": 0,
+      "priority": null,
+      "subtasks": []
+    }
+  ]
+}
