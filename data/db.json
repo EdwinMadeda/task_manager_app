@@ -8,9 +8,7 @@
       "durationHrs": 0,
       "durationMin": 0,
       "subtasks": [],
-      "dependencies": [
-        48
-      ]
+      "preceedingtasks": []
     },
     {
       "id": 48,
@@ -21,6 +19,14 @@
       "durationMin": 20,
       "priority": "1",
       "subtasks": [
+        {
+          "id": 4,
+          "text": "Hulla hoop",
+          "day": "2023-01-02T19:39:12.168Z",
+          "reminder": false,
+          "durationHrs": 0,
+          "durationMin": 0
+        },
         {
           "id": 2,
           "text": "Frog jump",
@@ -36,21 +42,20 @@
           "reminder": false,
           "durationHrs": 0,
           "durationMin": 0
-        }
-      ],
-      "dependencies": [
+        },
         {
           "id": 3,
-          "text": "Fetch exercise pants",
-          "day": "2022-12-27T10:59:10.635Z",
-          "reminder": true,
+          "text": "Duck jump",
+          "day": "2023-01-02T18:28:43.052Z",
+          "reminder": false,
           "durationHrs": 0,
-          "durationMin": 0,
-          "priority": null,
-          "subtasks": []
-        },
+          "durationMin": 0
+        }
+      ],
+      "preceedingtasks": [
         47,
-        3
+        3,
+        4
       ]
     },
     {
@@ -62,6 +67,37 @@
       "durationMin": 0,
       "priority": null,
       "subtasks": []
+    },
+    {
+      "id": 4,
+      "text": "Washing the dishes",
+      "day": "2023-01-02T03:04:31.487Z",
+      "reminder": false,
+      "durationHrs": 0,
+      "durationMin": 0,
+      "subtasks": []
+    },
+    {
+      "id": 5,
+      "text": "Go to work",
+      "day": "2023-01-04T01:03:20.433Z",
+      "reminder": false,
+      "durationHrs": 0,
+      "durationMin": 0,
+      "subtasks": [
+        {
+          "id": 1,
+          "text": "Visit the train station",
+          "day": "2023-01-04T01:04:50.141Z",
+          "reminder": false,
+          "durationHrs": 0,
+          "durationMin": 0,
+          "priority": null
+        }
+      ],
+      "preceedingtasks": [
+        48
+      ]
     }
   ]
 }

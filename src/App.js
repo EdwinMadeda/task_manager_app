@@ -49,13 +49,14 @@ function App() {
 
   useEffect(()=>{
 
-    const sortTasks = tasks.sort(function(a, b) {
-      var c = new Date(a.day);
-      var d = new Date(b.day);
-      return c-d;
-    });
+      const sortTasks = tasks.sort(function(a, b) {
+        var c = new Date(a.day);
+        var d = new Date(b.day);
+        return c-d;
+      });
 
-    setTasks(sortTasks);
+      setTasks(sortTasks);
+      
 
   },[tasks])
 
@@ -218,14 +219,14 @@ function App() {
     !addTaskForm && setEditTargetTask(null);
   }
 
-
-  return (
+  return ( 
 
     <div className="container">
 
      <Header addBtnClick={toggleAddBtnClick} showAdd={!addTaskForm} isSearch={isSearch} setIsSearch = {()=>{
               setAddTaskForm(false);
               setIsSearch(!isSearch)}}/>
+
      {addTaskForm && <AddTask 
                               allTasks={editTargetTask? tasks.filter(task => editTargetTask.id !== task.id): tasks}
                               editTargetTask = {editTargetTask}
@@ -244,7 +245,9 @@ function App() {
         <>
         {tasks.length > 0? (
             <Tasks 
-                tasks={tasks.filter(task => task.text.toLowerCase().includes(searchText.toLowerCase()))} 
+                // tasks={tasks.filter(task => task.text.toLowerCase().includes(searchText.toLowerCase()))} 
+                tasks={tasks}
+                searchText={searchText}
                 onDelete={deleteTask} 
                 onToggleEdit = {toggleEdit}
                 onToggleReminder={toggleReminder} />
@@ -264,10 +267,6 @@ function App() {
   );  
 }
 
-// class App extends React.Component{
-//   render(){
-//     return <h1>Hello from a class</h1>
-//   }
-// }
+
 
 export default App;

@@ -11,6 +11,10 @@
   margin: 5px;
 }
 
+.invisible{
+  visibility: hidden;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
 }
@@ -133,13 +137,24 @@ body {
 
 .subTask{
   margin-top: 15px;
-  border: 2px solid slateblue;
+  border: 1.5px solid slateblue;
 }
 
 .add-form {
   padding: 0 10px;
   border-radius: 5px;
   width: 100%;
+  position: relative;
+}
+
+.subTask_backBtn{
+  margin: 10px 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 8px;
+  z-index: 10;
+  font-size: 20px;
 }
 
 .add_task_extras{
@@ -166,12 +181,40 @@ body {
   align-items: center;
 }
 
+.add_task_extras_items-wrapper{
+  border-radius: 5px;
+  padding: 10px;
+  border: 1.5px solid slateblue;
+  margin-bottom: 5px;
+}
+
+.add_task_extras_items-wrapper::before{
+  background-color: #fff;
+  position: absolute;
+  right: 25px;
+  transform: translateY(-20px);
+  height: 20px;
+  padding: 0 5px;
+  font-size: 12px;
+  font-weight: bolder;
+  color: slateblue;
+  border-radius: 10px;
+}
+
+.add_task_extras_items-wrapper.dependencies::before{
+  content: 'dependencies';
+}
+
+.add_task_extras_items-wrapper.subtasks::before{
+  content: 'subtasks';
+}
+
 .add_task_extras_items{
   margin: 10px 0;
   padding: 0 20px;
   width: 100%;
   border-radius: 5px;
-  border: 2px solid slateblue;
+  border: 1.5px solid slateblue;
 }
 
 .add_task_extras_items li{
@@ -229,14 +272,6 @@ body {
 .add_subtaskIcon{
   margin-right: 5px;
 }
-
-.subTask_backBtn{
-  float: right;
-  margin: 10px 5px;
-  cursor: pointer;
-}
-
-
 
 .form-control {
   margin: 15px 0;

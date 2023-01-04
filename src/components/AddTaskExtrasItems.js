@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { FaTrash } from "react-icons/fa";
 import { BsArrowUpShort, BsArrowDownShort, BsChevronCompactUp, BsChevronCompactDown } from "react-icons/bs";
 
@@ -6,27 +6,23 @@ const AddTaskExtrasItems = ({label, items, onClickItem, initialTargetID=false, m
   
   const [showItems, setShowItems] = useState(true);
   const [targetItemID, setTargetItemID] = useState(initialTargetID);
-
+  const itemsRef = useRef(items);
+  
   useEffect(()=>{
     //setTargetItemID(false);
   },[items, markTarget]);
-    
-    if(items === undefined) return;
-
-    const returnItems = (items)=>{
-      return shiftIDs? items.map(item => item.id).filter(item => typeof(item) === 'number'): items;
-    }
 
     const shiftItems = (index, direction) =>{
       const index1 = direction === 'up'? index-1: index+1;
-      items[index] = items.splice(index1, 1, items[index])[0];
-
+      if(index1 > 0 || index1 < items.length -1)
+        items[index] = items.splice(index1, 1, items[index])[0];
+        
       return items.filter(item => item !== undefined);
     }
 
     const onRemoveItemClick = (targetItem)=>{
         const filteredItems = items.filter(item => item.id !== targetItem.id);
-        onRemoveItem && onRemoveItem(returnItems(filteredItems));
+        onRemoveItem && onRemoveItem(filteredItems);
     }
 
     const onTargetItemClick = (item)=>{
@@ -34,9 +30,8 @@ const AddTaskExtrasItems = ({label, items, onClickItem, initialTargetID=false, m
       markTarget !== null && setTargetItemID(item.id);
     }
 
-    
+    if(items === undefined) return;
 
-   
     return(
       <>{items.length > 0 && 
           <>

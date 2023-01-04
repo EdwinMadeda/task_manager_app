@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { BsFillBackspaceFill } from "react-icons/bs";
+
 import AddTaskText from "./TaskInputs/AddTaskText";
 import AddDayTime from "./TaskInputs/AddDayTime";
 import AddDuration from "./TaskInputs/AddDuration";
@@ -7,7 +9,14 @@ import AddReminder from "./TaskInputs/AddReminder";
 import AddSubmitBtn from "./TaskInputs/AddSubmitBtn";
 
 
-const AddSubTask = ({priority_levels, subTasks, setSubTasks, editTargetSubTask = null, subTaskSubmit, setSubTaskSubmit}) => {
+const AddSubTask = ({
+  priority_levels, 
+  subTasks, 
+  setSubTasks, 
+  editTargetSubTask = null, 
+  subTaskSubmit, 
+  setSubTaskSubmit,
+  backTaskBtnClick}) => {
     
     const [currSubTaskID, setCurrSubTaskID] = useState(subTasks.length+1);
     const [text, setText] = useState('');
@@ -66,6 +75,8 @@ const AddSubTask = ({priority_levels, subTasks, setSubTasks, editTargetSubTask =
     <>  
     {!subTaskSubmit && 
       <form className={`add-form subTask`} onSubmit={submit}>
+        
+          <BsFillBackspaceFill className="subTask_backBtn" onClick={backTaskBtnClick}/>
           <AddTaskText label={`SubTask ${currSubTaskID}`} value={text} onChange={setText}/>
           <AddDayTime value={text} onChange={setDay}/>
           <AddDuration valueHrs={durationHrs} valueMin={durationMin} 

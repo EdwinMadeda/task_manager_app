@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { BsChevronCompactDown, BsChevronCompactUp } from 'react-icons/bs';
 import { format } from "date-fns";
 
-const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask = ''}) => {
+const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask=false, searchText = ''}) => {
 
    const day_task = format(new Date(task.day), 'MMM dd, yyyy p');
    const targetToggleReminder = (e)=>{
@@ -20,9 +20,22 @@ const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask = ''}) 
         )
     );
 
-   const subTasks = task.subtasks || [];
+    const searchSubTasks = (task.subtasks || []).filter(subtask => {
+      const isSearchItem = (item)=>{
+         return searchText === ''? false: item.toLowerCase().includes(searchText.toLowerCase());
+      }
+      return isSearchItem(subtask.text)
+  
+    });
+
+   const subTasks = (searchSubTasks.length > 0)? searchSubTasks : task.subtasks || [];
    const subTasksCount = Object.keys(subTasks).length;
    const [visible, setVisible] = useState(false);
+
+   useEffect(()=>{
+      setVisible(searchSubTasks.length > 0);
+   },[searchSubTasks.length])
+
 
   return (
     <div className={`task ${task.reminder? 'reminder': ''}`}>
@@ -42,7 +55,9 @@ const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask = ''}) 
           {subTasksCount > 0 && 
             <p>
                 <i className="drop_down" onClick={()=> setVisible(!visible)}>
-                  <span>{subTasksCount} {`Subtask${subTasksCount === 1?'':'s'}`}</span>
+                  <span>
+                    {`${subTasksCount} ${searchSubTasks.length > 0? 'matching':''} subtask${subTasksCount === 1?'':'s'}`}
+                  </span>
                   {visible? <BsChevronCompactUp/> : <BsChevronCompactDown/>}
                 </i>
             </p>
@@ -58,7 +73,7 @@ const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask = ''}) 
                   onToggleEdit={()=>onToggleEdit({taskId: task.id, subTaskId: subtask.id})}
                   onToggleReminder={()=>onToggleReminder({taskId: task.id, subTaskId: subtask.id})}
 
-                  isSubtask = {'subTask'}
+                  isSubtask = {true}
                   />
               ))}
             </>}

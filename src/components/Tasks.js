@@ -1,16 +1,33 @@
+import { useRef } from "react";
 import Task from "./Task";
 
-const Tasks = ({tasks, onDelete, onToggleEdit, onToggleReminder}) => {
+const Tasks = ({tasks, searchText, onDelete, onToggleEdit, onToggleReminder}) => {
+  const tasksRef = useRef(tasks);
+
+  const filterSearch = (mytasks)=>{
+    const searchItem = (item)=>{
+       return item.toLowerCase().includes(searchText.toLowerCase());
+    }
+    
+    return mytasks.filter(task => {
+          const searchResult = searchItem(task.text);
+          const subtasks = task.subtasks === undefined? []: 
+                          task.subtasks.filter(subtask => searchItem(subtask.text));
+              
+          if(subtasks.length > 0 || searchResult) return {...task, subtasks};
+   });
+ }
   
   return (
     <>
-        {tasks.map(task => (
+        {filterSearch(tasks).map(task => (
             <Task 
               key={task.id} 
               task={task} 
               onDelete={onDelete}
               onToggleEdit={onToggleEdit}
               onToggleReminder={onToggleReminder}
+              searchText = {searchText}
             />
         ))}
     </> 
