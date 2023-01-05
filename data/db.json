@@ -62,7 +62,7 @@
       "id": 3,
       "text": "Fetch exercise pants",
       "day": "2022-12-27T10:59:10.635Z",
-      "reminder": true,
+      "reminder": false,
       "durationHrs": 0,
       "durationMin": 0,
       "priority": null,
@@ -98,6 +98,25 @@
       "preceedingtasks": [
         48
       ]
+    },
+    {
+      "id": 6,
+      "text": "Visit Auntie in Missouri",
+      "day": "2023-01-05T02:06:18.487Z",
+      "reminder": false,
+      "durationHrs": 0,
+      "durationMin": 0,
+      "subtasks": [
+        {
+          "id": 1,
+          "text": "Eat dinner there",
+          "day": "2023-01-05T10:59:40.745Z",
+          "reminder": false,
+          "durationHrs": 0,
+          "durationMin": 0
+        }
+      ],
+      "preceedingtasks": []
     }
   ]
 }

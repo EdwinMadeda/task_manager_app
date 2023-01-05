@@ -41,12 +41,13 @@ const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask=false, 
     <div className={`task ${task.reminder? 'reminder': ''}`}>
         <h3 onDoubleClick={targetToggleReminder}> 
           <span> 
-            <i className='editBtn'>
-              <FaEdit 
-                onClick={()=>{onToggleEdit(task.id)}} 
-                title='edit task'/></i> 
-                {task.text} 
-                {duration !== '' && ` (${duration})`}
+              <i className='editBtn'>
+                <FaEdit 
+                  onClick={()=>{onToggleEdit(task.id)}} 
+                  title='edit task'/>
+              </i> 
+              {task.text}
+              {duration !== '' && ` (${duration})`}
            </span> 
           <FaTrash onClick={()=>onDelete(task.id)}/>
         </h3>

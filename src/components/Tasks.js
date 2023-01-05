@@ -1,15 +1,15 @@
-import { useRef } from "react";
+
 import Task from "./Task";
 
 const Tasks = ({tasks, searchText, onDelete, onToggleEdit, onToggleReminder}) => {
-  const tasksRef = useRef(tasks);
-
+ 
   const filterSearch = (mytasks)=>{
     const searchItem = (item)=>{
        return item.toLowerCase().includes(searchText.toLowerCase());
     }
     
     return mytasks.filter(task => {
+       
           const searchResult = searchItem(task.text);
           const subtasks = task.subtasks === undefined? []: 
                           task.subtasks.filter(subtask => searchItem(subtask.text));
