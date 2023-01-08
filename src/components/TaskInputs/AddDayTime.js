@@ -8,7 +8,7 @@ const AddDayTime = ({value, onChange, insertError = false}) => {
          {insertError && <p className='errorMsg'>{insertError}</p>}
       </label>
       <input type="datetime-local" id="add_day&time" placeholder='Add Day & Time' value={value} 
-            onChange={e => { onChange(e.target.value) }}/>
+            onChange={e => {onChange(e.target.value) }}/>
     </div>
   )
 }

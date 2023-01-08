@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useEffect, useReducer} from "react";
 
 import AddTaskText from "./TaskInputs/AddTaskText";
 import AddDayTime from "./TaskInputs/AddDayTime";
@@ -12,190 +12,218 @@ import AddTaskExtrasBtns from "./AddTaskExtrasBtns";
 
 import AddSubTask from "./AddSubTask";
 
-const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null,setEditTargetSubTask, onAdd, onEdit}) => {
 
-    const [text, setText] = useState('');
-    const [day, setDay] = useState(new Date());
-    const [reminder, setReminder] = useState(false);
-    const [durationHrs, setDurationHrs] = useState(0);
-    const [durationMin, setDurationMin] = useState(0);
-    const [priority, setPriority] = useState(undefined);
 
-    const [textError, setTextError] = useState(false);
 
-    const [task, setTask] = useState({});
-    const [subTasks, setSubTasks] = useState([]);
-    const [isSubTask,setIsSubTask] = useState(false);
-    const [targetSubTask, setTargetSubtask] = useState(editTargetSubTask? editTargetSubTask: {});
-    const [subTaskSubmit, setSubTaskSubmit] = useState(false);
+const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null, setEditTargetSubTask, onAdd, onEdit}) => {
 
-    const [isPreceedingTasks, setIsPreceedingTasks] = useState(false);
-    const [preceedingTaskIDs, setPreceedingTaskIDs] = useState([]);
-    const [preceedingTasks, setPreceedingTasks] = useState({current: [], possible: []});
-    const [succeedingTasks, setSucceedingTasks] = useState([]);
+  const filterCurrentPreceedingTasks = (IDs) => allTasks.filter(task => IDs.includes(task.id));
+  const filterPossiblePreceedingTasks = (IDs) => allTasks.filter(task => !IDs.includes(task.id));
+  const filterSucceedingTasks = ()=>{
+     if(!editTargetTask) return [];
+          return allTasks.filter(task => {
+          return task.preceedingtasks === undefined? false : 
+                task.preceedingtasks.includes(editTargetTask.id);
+          });
+    };
 
-    const filterCurrentPreceedingTasks = (IDs) => allTasks.filter(task => IDs.includes(task.id));
-    const filterPossiblePreceedingTasks = (IDs) => allTasks.filter(task => !IDs.includes(task.id));
-    const filterSucceedingTasks = ()=>{
-       if(!editTargetTask) return [];
-            return allTasks.filter(task => {
-            return task.preceedingtasks === undefined? false : 
-                  task.preceedingtasks.includes(editTargetTask.id);
-            });
-      };
-
-    const priority_levels = [
-      "Urgent and important",
-      "Important, but not urgent",
-      "Urgent, but not important",
-      "Neither urgent nor important"
-    ];
-
-    const clearForm = ()=>{
-      setText('');
-      setDay(new Date());
-      setReminder(false);
-      setDurationHrs(0);
-      setDurationMin(0);
-      setPriority(undefined);
-
-    }
-
-    useEffect(()=>{
-
-      const refreshVals = ()=>{
-        const id = editTargetTask? editTargetTask.id : allTasks.length + 1;
-        setTextError(false);
-        setTask({id, text, day, reminder, durationHrs, durationMin, priority, subtasks : subTasks});
-
-      }
-      refreshVals();
-
-    },[text, day, reminder, durationHrs, durationMin, priority, subTasks]);
-
-    useEffect(()=> {
-
-      const refreshVals = ()=>{
-        setTask({...task, preceedingtasks: preceedingTaskIDs});
-      
-        setPreceedingTasks({
-          current : filterCurrentPreceedingTasks(preceedingTaskIDs),
-          possible : filterPossiblePreceedingTasks(preceedingTaskIDs),
-        });
-
-      }
-      refreshVals();
-     
-    }, [preceedingTaskIDs]);
+  const initialState = {
+    text : '',
+    day : new Date(), 
+    reminder : false, 
+    durationHrs : 0, 
+    durationMin : 0, 
+    priority : undefined,
    
-    useEffect(()=>{
-      const refreshVals = ()=>{
-        if(editTargetTask){
-          const obj = editTargetTask;
-          clearForm();
+    textError : false, 
   
-          setText(obj.text || '');
-          setDay(obj.day || new Date());
-          setReminder(obj.reminder || false);
-          setDurationHrs(obj.durationHrs || 0);
-          setDurationMin(obj.durationMin || 0);
-          setPriority(obj.priority || undefined);
+    task : {}, 
+    subTasks : [], 
+    isSubTask : false,
+    targetSubTask : null, 
+    subTaskSubmit : false,
   
-          setTask(editTargetTask);
-          setSubTasks(editTargetTask.subtasks);
-          setPreceedingTaskIDs(editTargetTask.preceedingtasks || []);
-          setSucceedingTasks(filterSucceedingTasks());
-  
-          editTargetSubTask && AddSubTaskBtnClick();
-        }
+    isPreceedingTasks : false,
+    preceedingTaskIDs : [], 
+    preceedingTasks : {current: [], possible: []}, 
+    succeedingTasks : [], 
+
+   };
+
+   const init = ()=>{
+    const obj = editTargetTask;
+    let id = allTasks.length + 1;
+    let {text, day, reminder, durationHrs, durationMin, priority,subTasks,
+          preceedingTaskIDs, preceedingTasks, succeedingTasks, isSubTask} = initialState;
+       
+    if(obj){
+      id = obj.id;
+      text = obj.text;
+      day = obj.day;
+      reminder = obj.reminder;
+      durationHrs = obj.durationHrs;
+      durationMin = obj.durationMin;
+      priority = obj.priority;
+      subTasks = obj.subtasks || [];
+      preceedingTaskIDs = obj.preceedingTaskIDs || [];
+      preceedingTasks = {
+        current : filterCurrentPreceedingTasks(preceedingTaskIDs),
+        possible : filterPossiblePreceedingTasks(preceedingTaskIDs)
       }
-      refreshVals();
-    
-    },[editTargetTask]);
-
-    useEffect(()=>{
-
-      if(subTasks.length > 0 && subTaskSubmit){
-        setTask({...task, subtasks: subTasks})
-        backTaskBtnClick();
-        setSubTaskSubmit(false);
-      }
-
-    }, [subTasks, subTaskSubmit])
-    
-    const submit = (e)=>{
-        e.preventDefault();
-        editTargetTask? onEdit(task) : onAdd(task);
-        clearForm();
+      succeedingTasks  = filterSucceedingTasks();
+      isSubTask = (editTargetSubTask !== null);
     }
 
-    const AddSubTaskBtnClick = (targetSubTask = editTargetSubTask)=>{
+    const task = {id, text, day, reminder, durationHrs, durationMin, priority, subtasks : subTasks, preceedingTaskIDs}
+    return {...initialState, ...task, task, subTasks, preceedingTasks, succeedingTasks, targetSubTask : editTargetSubTask};
+
+  }
+   
+   const clearForm = (state)=>{
+      return {...state, 
+              text : initialState.text,
+              day: initialState.day,
+              reminder: initialState.reminder,
+              durationHrs: initialState.durationHrs,
+              durationMin: initialState.durationMin,
+              priority: initialState.priority};
+   }
+  
+   const reducer = (state, action) =>{
+       const setTask = ()=> ({...state, ...action.payload, task : {...state.task, ...action.payload}});
      
-      if(text !== '' || (editTargetTask && targetSubTask)){ 
-        setTargetSubtask(targetSubTask);
-        setIsSubTask(true);
-        return;
-      }
-      setTextError('Field cannot be empty')
-    }
+       switch(action.type){
+          case 'setText':         return setTask();
+          case 'setDay':          return setTask();
+          case 'setDurationHrs':  return setTask();
+          case 'setDurationMin':  return setTask();
+          case 'setPriority':     return setTask();
+          case 'setReminder':     return setTask(); 
+          case 'setPreceedingTaskIDs': return setTask();
+          case 'setSubTasks' : return {...state, 
+                                       subTasks : action.payload, 
+                                       task: {...state.task, subtasks: action.payload}};
 
-    const backTaskBtnClick =()=>{
-       setIsSubTask(false);
-    }
+          case 'setTargetSubtask' : return {...state, targetSubTask: action.payload};
+          case 'setIsSubTask' : return {...state, isSubTask: action.payload}; 
+          case 'setSubTaskSubmit' : 
 
-    const AddPreceedingTaskBtnClick = (preceedingItem) =>{
-      setPreceedingTaskIDs([...preceedingTaskIDs, preceedingItem.id])
-    }
+          
+              return {...state, subTaskSubmit: action.payload};
 
-    const ResetCurrentPreceedingTasks = (preceedingItems)=>{
+          case 'setPreceedingTasksObj': return {...state, preceedingTasks : action.payload};
+          case 'setIsPreceedingTasks' : return {...state, isPreceedingTasks : action.payload};
+         
 
-        const IDs = preceedingItems.map(item => item.id);
-        const current = preceedingItems;
-        const possible = filterPossiblePreceedingTasks(IDs)
+          case 'init': return init(); 
+          case 'clearForm': return clearForm(state);      
+       }
 
-        setPreceedingTasks({...preceedingTasks, current , possible});
-    }
+   };
+   
+   const [state, dispatch] = useReducer(reducer, initialState, init);
 
-    const ResetPossiblePreceedingTasks = (preceedingItems)=>{
+   const priority_levels = [
+    "Urgent and important",
+    "Important, but not urgent",
+    "Urgent, but not important",
+    "Neither urgent nor important"
+  ];
 
-      const IDs = preceedingItems.map(item => item.id);
-      const current = filterPossiblePreceedingTasks(IDs);
-      const possible = preceedingItems;
+  useEffect(()=>{
 
-      setPreceedingTasks({...preceedingTasks, current , possible});
+    (state.targetSubTask) && AddSubTaskBtnClick();
+    (state.subTasks.length > 0 && state.subTaskSubmit) && backTaskBtnClick();
+    
+  }, [state.subTaskSubmit])
+
+  const submit = e =>{
+    e.preventDefault();
+    editTargetTask? onEdit(state.task) : onAdd(state.task);
+    dispatch({type : 'clearForm'});
+    
   }
 
-  return (
+  const ResetSubTasks = (subTasks) =>{
+     dispatch({type : 'setSubTasks', payload : subTasks});
+  }
+  
+  const ResetCurrentPreceedingTasks = (preceedingItems)=>{
+
+    const IDs = preceedingItems.map(item => item.id);
+    const current = preceedingItems;
+    const possible = filterPossiblePreceedingTasks(IDs)
+    const preceedingTasks = {...state.preceedingTasks, current , possible};
+
+    dispatch({type: "setPreceedingTasksObj", payload : preceedingTasks});
+}
+
+const ResetPossiblePreceedingTasks = (preceedingItems)=>{
+
+  const IDs = preceedingItems.map(item => item.id);
+  const current = filterPossiblePreceedingTasks(IDs);
+  const possible = preceedingItems;
+  const preceedingTasks = {...state.preceedingTasks, current , possible};
+
+  dispatch({type: "setPreceedingTasksObj", payload : preceedingTasks});
+}
+
+const AddPreceedingTaskBtnClick = (preceedingItem) =>{
+
+  if(!state.preceedingTaskIDs.includes(preceedingItem.id)){
+    const preceedingTaskIDs = [...state.preceedingTaskIDs, preceedingItem.id];
+    dispatch({type: "setPreceedingTaskIDs", payload: {preceedingTaskIDs}})
+  } 
+
+}
+
+ const AddSubTaskBtnClick = (targetSubTask = state.targetSubTask)=>{
+     
+      if(state.text !== '' || (editTargetTask && state.targetSubTask)){ 
+       
+        dispatch({type : "setTargetSubtask", payload: targetSubTask});
+        dispatch({type : "setIsSubTask", payload: true});
+        return;
+      }
+      dispatch({type: "setTextError", payload: 'Field cannot be empty'});
+
+}
+
+const backTaskBtnClick =()=>{
+  dispatch({type: "setIsSubTask", payload: false});
+  dispatch({type : "setTargetSubtask", payload: null});
+}
+
+return (
     <>
       <form className={`add-form Task`} onSubmit={submit}>
-          
-            <AddTaskText 
+          <AddTaskText 
               label={`Task`} 
-              value={text} 
-              onChange={setText} 
-              insertError={textError}/>
-            
-            {subTasks.length > 0 &&
+              value={state.text} 
+              onChange={inputVal => dispatch({type: 'setText', payload: {text: inputVal}})} 
+              insertError={state.textError}/>
+
+          {state.subTasks.length > 0 &&
               <section className="add_task_extras_items-wrapper subtasks">
                 <AddTaskExtrasItems 
                       label = {'Added SubTasks:'}
-                      items = {subTasks}
+                      items = {state.subTasks}
                       onClickItem = {AddSubTaskBtnClick}
-                      onShiftItems = {setSubTasks}
-                      onRemoveItem = {setSubTasks}
-                      initialTargetID = {editTargetSubTask !== null? editTargetSubTask.id: false}
-                      markTarget = {isSubTask} />
+                      onShiftItems = {ResetSubTasks}
+                      onRemoveItem = {ResetSubTasks}
+                      initialTargetID = {state.targetSubTask !== null? state.targetSubTask.id: false}
+                      markTarget = {state.isSubTask} />
               </section>
             }
 
-            {!isSubTask &&
+            {!state.isSubTask &&
               <>
-                {(preceedingTasks.current.length > 0 || succeedingTasks.length > 0) &&
+                {(state.preceedingTasks.current.length > 0 || state.succeedingTasks.length > 0) &&
                     <section className="add_task_extras_items-wrapper dependencies">
 
                         <AddTaskExtrasItems 
                           label = {'Preceeding tasks:'}
-                          items = {preceedingTasks.current}
+                          items = {state.preceedingTasks.current}
                           shiftIDs = {true}
                           onShiftItems = {ResetCurrentPreceedingTasks}
                           onRemoveItem = {ResetCurrentPreceedingTasks}
@@ -203,7 +231,7 @@ const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null,setE
 
                         <AddTaskExtrasItems 
                           label = {'Succeeding tasks:'}
-                          items = {succeedingTasks}
+                          items = {state.succeedingTasks}
                         />
                         
                     </section>
@@ -211,43 +239,57 @@ const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null,setE
 
                   <AddTaskExtrasBtns 
                       setIsSubTask = {AddSubTaskBtnClick} 
-                      isPreceedingTasks = {isPreceedingTasks}
-                      setIsPreceedingTasks={()=>setIsPreceedingTasks(!isPreceedingTasks)} 
-                      showPreceedingTasksBtn={true}/>
+                      isPreceedingTasks = {state.isPreceedingTasks}
+                      setIsPreceedingTasks={()=>dispatch({type: "setIsPreceedingTasks", payload: !state.isPreceedingTasks})} 
+                      showPreceedingTasksBtn={true}
+                  />
 
-                  {isPreceedingTasks &&
+                  {state.isPreceedingTasks &&
                     <AddTaskExtrasItems 
                         label = {'Possible preceeding tasks:'}
-                        items = {preceedingTasks.possible}
+                        items = {state.preceedingTasks.possible}
                         onClickItem = {AddPreceedingTaskBtnClick}
                         onShiftItems = {ResetPossiblePreceedingTasks}
                         onRemoveItem = {ResetPossiblePreceedingTasks}
                     />
                   }
 
-                  <AddDayTime value={text} onChange={setDay}/>
-                  <AddDuration valueHrs={durationHrs} valueMin={durationMin} 
-                                onChangeHrs={setDurationHrs} onChangeMin={setDurationMin}/>
-                  <AddPriority priority_levels={priority_levels} priority={priority} onChange={setPriority}/>
-                  <AddReminder value={reminder} onChange={setReminder}/>
-                  <AddSubmitBtn value={"Save Task"}/>
+                    <AddDayTime 
+                      value={state.day} 
+                      onChange={inputVal => dispatch({type: 'setDay', payload: {day : inputVal}})}/>
+                    <AddDuration 
+                        valueHrs={state.durationHrs} 
+                        valueMin={state.durationMin} 
+                        onChangeHrs={inputVal => dispatch({type: 'setDurationHrs', payload: {durationHrs: inputVal}})} 
+                        onChangeMin={inputVal => dispatch({type: 'setDurationMin', payload: {durationMin: inputVal}})}/>
+                    <AddPriority 
+                        priority_levels={priority_levels} 
+                        priority={state.priority} 
+                        onChange={inputVal => dispatch({type: 'setPriority', payload: {priority: inputVal}})}/>
+                    <AddReminder 
+                        value={state.reminder} 
+                        onChange={inputVal => dispatch({type: 'setReminder', payload : {reminder: inputVal}})}/>
+                    <AddSubmitBtn value={"Save Task"}/>
               </>
-              
             }
+              
+           
+
       </form>
 
-      {isSubTask && 
+      {state.isSubTask && 
         <>
         <AddSubTask 
             priority_levels={priority_levels} 
-            subTasks = {subTasks}
-            setSubTasks = {setSubTasks}
-            editTargetSubTask={targetSubTask} 
-            subTaskSubmit = {subTaskSubmit}
-            setSubTaskSubmit = {setSubTaskSubmit}
+            subTasks = {state.subTasks}
+            editTargetSubTask={state.targetSubTask} 
+            subTaskSubmit = {state.subTaskSubmit}
+            setSubTasks = {subTasks => dispatch({type : 'setSubTasks', payload : subTasks})}
+            setSubTaskSubmit = {subTaskSubmit => dispatch({type: "setSubTaskSubmit", payload : {subTaskSubmit}})}
             backTaskBtnClick = {backTaskBtnClick}/>
         </>
       }
+
     </>
   )
 }

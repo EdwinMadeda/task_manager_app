@@ -48,7 +48,6 @@ const AddSubTask = ({
         setDurationHrs(obj.durationHrs || 0);
         setDurationMin(obj.durationMin || 0);
         setPriority(obj.priority || null);
-       
 
       }
     },[editTargetSubTask]);
@@ -69,6 +68,7 @@ const AddSubTask = ({
         setSubTasks(newSubTasks);
         setSubTaskSubmit(true);
         clearForm();
+
     }
 
   return (

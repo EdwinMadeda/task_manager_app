@@ -6,12 +6,7 @@ const AddTaskExtrasItems = ({label, items, onClickItem, initialTargetID=false, m
   
   const [showItems, setShowItems] = useState(true);
   const [targetItemID, setTargetItemID] = useState(initialTargetID);
-  const itemsRef = useRef(items);
   
-  useEffect(()=>{
-    //setTargetItemID(false);
-  },[items, markTarget]);
-
     const shiftItems = (index, direction) =>{
       const index1 = direction === 'up'? index-1: index+1;
       if(index1 > 0 || index1 < items.length -1)
