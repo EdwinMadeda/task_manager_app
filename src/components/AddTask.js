@@ -1,5 +1,6 @@
-import { useEffect, useReducer} from "react";
+import { useEffect, useReducer, useRef} from "react";
 import { BsToggle2On, BsToggle2Off} from "react-icons/bs";
+import { AiFillForward } from "react-icons/ai";
 
 import AddTaskText from "./TaskInputs/AddTaskText";
 import AddDayTime from "./TaskInputs/AddDayTime";
@@ -14,16 +15,15 @@ import AddTaskExtrasBtns from "./AddTaskExtrasBtns";
 import AddSubTask from "./AddSubTask";
 
 
-
-
 const AddTask = ({
     allTasks, 
     editTargetTask = null, 
     editTargetSubTask = null, 
     isViewTask = false, 
-    onToggleViewTask,
     onAdd, 
     onEdit}) => {
+
+  const editTargetTaskRef = useRef(editTargetTask);
 
   const filterCurrentPreceedingTasks = (IDs) => allTasks.filter(task => IDs.includes(task.id));
   const filterPossiblePreceedingTasks = (IDs) => allTasks.filter(task => !IDs.includes(task.id));
@@ -128,6 +128,11 @@ const AddTask = ({
 
           case 'toggleEditMode' : return {...state, isViewTask: !state.isViewTask};
 
+          case 'resetEditTargetTask' : {
+              editTargetTask = action.payload;
+              return init();
+          }
+
           case 'init': return init(); 
           case 'clearForm': return clearForm(state);      
        }
@@ -215,15 +220,24 @@ const backTaskBtnClick =()=>{
 
 return (
     <>
+  
       {editTargetTask && isViewTask &&
-        <p className="toggleEditMode_wrapper">
-            <span>Edit mode</span>
-            <a className="toggleEditMode_btn"
-              onClick={() => dispatch({type : 'toggleEditMode'})}>
-              {state.isViewTask? <BsToggle2Off/> : <BsToggle2On/>}
-            </a>
-            <span>{state.isViewTask? 'OFF' : 'ON'}</span>
-        </p>
+        <div className="editTask_Btns_wrapper"> 
+
+          <AiFillForward 
+            className={`toggleBackTask_btn ${editTargetTaskRef.current.id === editTargetTask.id && 'invisible'}`}
+            onClick={()=> dispatch({type: 'resetEditTargetTask', payload: editTargetTaskRef.current})}/>
+
+          <p className="toggleEditMode_btns">
+              <span>Edit mode</span>
+              <a className="toggleEditMode_btn"
+                onClick={() => dispatch({type : 'toggleEditMode'})}>
+                {state.isViewTask? <BsToggle2Off/> : <BsToggle2On/>}
+              </a>
+              <span>{state.isViewTask? 'OFF' : 'ON'}</span>
+          </p>
+
+        </div>
       }
       <form className={`add-form Task`} onSubmit={submit}>
           <AddTaskText 
@@ -255,7 +269,7 @@ return (
                         <AddTaskExtrasItems 
                           label = {'Preceeding tasks:'}
                           items = {state.preceedingTasks.current}
-                          onClickItem = {item =>{console.log(item)}}
+                          onClickItem = {item =>{dispatch({type: 'resetEditTargetTask', payload: item})}}
                           shiftIDs = {true}
                           onShiftItems = {ResetCurrentPreceedingTasks}
                           onRemoveItem = {ResetCurrentPreceedingTasks}
@@ -265,7 +279,7 @@ return (
                         <AddTaskExtrasItems 
                           label = {'Succeeding tasks:'}
                           items = {state.succeedingTasks}
-                          onClickItem = {()=>{}}
+                          onClickItem = {item =>{dispatch({type: 'resetEditTargetTask', payload: item})}}
                           isViewTask = {state.isViewTask}
                         />
                         

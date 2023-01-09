@@ -143,13 +143,13 @@ function App() {
       const targetSubTask = targetTask.subtasks.filter(subTask => subTaskId === subTask.id)[0];
             setEditTargetSubTask(targetSubTask);
             id = taskId;
-
     }
     
     const targetTask = tasks.filter(task => id === task.id)[0];
     setEditTargetTask(targetTask);    
     setOpenAddTaskFormID(openAddTaskFormID === id? undefined : id);
     setAddTaskForm(openAddTaskFormID === id? !addTaskForm : true);
+
   }
 
   const toggleReminder = async (id) =>{
@@ -199,8 +199,10 @@ function App() {
   }
 
   const toggleViewTask = (taskId)=>{
+    
     toggleEdit(taskId);
     setIsViewTask(true);
+   
  }
 
   return ( 
@@ -218,7 +220,6 @@ function App() {
                         isViewTask = {isViewTask}
                         onAdd={addTask} 
                         onEdit={editTask}
-                        onToggleViewTask={toggleViewTask}
                       />}
 
       {isSearch && <SearchTask  

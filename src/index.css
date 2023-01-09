@@ -7,7 +7,6 @@
 }
 
 
-
 .errorMsg{
   color: crimson; 
   margin: 5px;
@@ -169,16 +168,31 @@ body {
   border: 1.5px solid slateblue;
 }
 
-.toggleEditMode_wrapper{
+.editTask_Btns_wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editTask_Btns_wrapper .toggleBackTask_btn{
+  font-size: 20px;
+}
+
+.editTask_Btns_wrapper .toggleBackTask_btn:hover{
+  cursor: pointer;
+}
+
+.editTask_Btns_wrapper .toggleEditMode_btns{
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.toggleEditMode_wrapper span{
+.editTask_Btns_wrapper .toggleEditMode_btns span{
   margin:0 12px 0 2px;
 }
-.toggleEditMode_btn{
+
+.editTask_Btns_wrapper .toggleEditMode_btn{
   display: flex;
   justify-content: center;
   align-items: center;
