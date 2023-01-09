@@ -114,6 +114,9 @@ body {
   margin: 5px;
   padding: 10px 20px;
   cursor: pointer;
+
+  display: grid;
+  grid-template-columns: 20px 1fr 20px;
 }
 
 .task.reminder {
@@ -126,6 +129,11 @@ body {
   justify-content: space-between;
 }
 
+.task .dayTimeText{
+  font-size: 14px;
+  color: #454545;
+}
+
 .task .drop_down{
   display: flex;
   justify-content: flex-start;
@@ -136,6 +144,7 @@ body {
 .task .drop_down span{
   margin-right: 10px;
 }
+
 
 .subTask{
   margin-top: 15px;
@@ -314,6 +323,11 @@ body {
   border-radius: 5px;
   border: 1px solid #aeaeae;
   margin: 4px 0;
+  cursor: pointer;
+}
+
+.form-control .radio__container input{
+   margin: 8px 10px;
 }
 
 .form-control-check {

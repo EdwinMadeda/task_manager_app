@@ -5,7 +5,7 @@ import { format } from "date-fns";
 
 const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask=false, searchText = ''}) => {
 
-   const day_task = format(new Date(task.day), 'MMM dd, yyyy p');
+   const day_task = format(new Date(task.day), 'do MMM, yyyy - p');
    const targetToggleReminder = (e)=>{
       const editBtn = document.getElementsByClassName('editBtn')[0];
       !editBtn.contains(e.target) && onToggleReminder(task.id);
@@ -39,46 +39,41 @@ const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask=false, 
 
   return (
     <div className={`task ${task.reminder? 'reminder': ''}`}>
-        <h3 onDoubleClick={targetToggleReminder}> 
-          <span> 
-              <i className='editBtn'>
-                <FaEdit 
-                  onClick={()=>{onToggleEdit(task.id)}} 
-                  title='edit task'/>
-              </i> 
-              {task.text}
-              {duration !== '' && ` (${duration})`}
-           </span> 
-          <FaTrash onClick={()=>onDelete(task.id)}/>
-        </h3>
-        <p>{`Day & Time: ${day_task}`}</p>
-
-          {subTasksCount > 0 && 
-            <p>
-                <i className="drop_down" onClick={()=> setVisible(!visible)}>
-                  <span>
-                    {`${subTasksCount} ${searchSubTasks.length > 0? 'matching':''} subtask${subTasksCount === 1?'':'s'}`}
-                  </span>
-                  {visible? <BsChevronCompactUp/> : <BsChevronCompactDown/>}
-                </i>
-            </p>
-          }
         
-          {visible && 
-            <>
-             {subTasks.map(subtask => (
-                  <Task 
-                  key={subtask.id} 
-                  task={subtask} 
-                  onDelete={()=>onDelete({taskId: task.id, subTaskId: subtask.id})}
-                  onToggleEdit={()=>onToggleEdit({taskId: task.id, subTaskId: subtask.id})}
-                  onToggleReminder={()=>onToggleReminder({taskId: task.id, subTaskId: subtask.id})}
+        <FaEdit className='editBtn' onClick={()=>{onToggleEdit(task.id)}} title='edit task'/>
+        <div className='task__body'>
 
-                  isSubtask = {true}
-                  />
-              ))}
-            </>}
+             <h3 onDoubleClick={targetToggleReminder}>{task.text}</h3>
+             <p className='dayTimeText'>{`Day & Time: ${day_task}`}</p>
+          
+            {subTasksCount > 0 && 
+              <p>
+                  <i className="drop_down" onClick={()=> setVisible(!visible)}>
+                    <span>
+                      {`${subTasksCount} ${searchSubTasks.length > 0? 'matching':''} subtask${subTasksCount === 1?'':'s'}`}
+                    </span>
+                    {visible? <BsChevronCompactUp/> : <BsChevronCompactDown/>}
+                  </i>
+              </p>
+            }
+        
+            {visible && 
+              <>
+              {subTasks.map(subtask => (
+                    <Task 
+                    key={subtask.id} 
+                    task={subtask} 
+                    onDelete={()=>onDelete({taskId: task.id, subTaskId: subtask.id})}
+                    onToggleEdit={()=>onToggleEdit({taskId: task.id, subTaskId: subtask.id})}
+                    onToggleReminder={()=>onToggleReminder({taskId: task.id, subTaskId: subtask.id})}
 
+                    isSubtask = {true}
+                    />
+                ))}
+              </>}
+
+        </div>
+        <FaTrash onClick={()=>onDelete(task.id)}/>
     </div>
   )
 }

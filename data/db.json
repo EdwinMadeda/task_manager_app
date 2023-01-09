@@ -7,7 +7,25 @@
       "reminder": true,
       "durationHrs": 0,
       "durationMin": 0,
-      "subtasks": [],
+      "priority": "1",
+      "subtasks": [
+        {
+          "text": "Fetch ice cold bear",
+          "day": "2023-01-09T07:25:37.948Z",
+          "reminder": false,
+          "durationHrs": 0,
+          "durationMin": 0,
+          "id": 2
+        },
+        {
+          "text": "Make donuts",
+          "day": "2023-01-09T07:21:22.518Z",
+          "reminder": false,
+          "durationHrs": 0,
+          "durationMin": 0,
+          "id": 1
+        }
+      ],
       "preceedingTaskIDs": []
     },
     {
@@ -134,7 +152,9 @@
       "durationHrs": 0,
       "durationMin": 0,
       "subtasks": [],
-      "preceedingTaskIDs": []
+      "preceedingTaskIDs": [
+        47
+      ]
     }
   ]
 }

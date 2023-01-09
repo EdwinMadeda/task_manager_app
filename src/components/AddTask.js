@@ -21,9 +21,10 @@ const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null, set
   const filterPossiblePreceedingTasks = (IDs) => allTasks.filter(task => !IDs.includes(task.id));
   const filterSucceedingTasks = ()=>{
      if(!editTargetTask) return [];
+
           return allTasks.filter(task => {
-          return task.preceedingtasks === undefined? false : 
-                task.preceedingtasks.includes(editTargetTask.id);
+          return task.preceedingTaskIDs === undefined? false : 
+                task.preceedingTaskIDs.includes(editTargetTask.id);
           });
     };
 
@@ -72,6 +73,7 @@ const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null, set
       }
       succeedingTasks  = filterSucceedingTasks();
       isSubTask = (editTargetSubTask !== null);
+
     }
 
     const task = {id, text, day, reminder, durationHrs, durationMin, priority, subtasks : subTasks, preceedingTaskIDs}
@@ -169,10 +171,16 @@ const ResetPossiblePreceedingTasks = (preceedingItems)=>{
 }
 
 const AddPreceedingTaskBtnClick = (preceedingItem) =>{
-
+  
   if(!state.preceedingTaskIDs.includes(preceedingItem.id)){
+
     const preceedingTaskIDs = [...state.preceedingTaskIDs, preceedingItem.id];
-    dispatch({type: "setPreceedingTaskIDs", payload: {preceedingTaskIDs}})
+    const preceedingTasks = {
+      current : filterCurrentPreceedingTasks(preceedingTaskIDs),
+      possible : filterPossiblePreceedingTasks(preceedingTaskIDs),
+    }
+    dispatch({type: "setPreceedingTaskIDs", payload: {preceedingTaskIDs}});
+    dispatch({type: "setPreceedingTasksObj", payload : preceedingTasks});
   } 
 
 }
@@ -224,6 +232,7 @@ return (
                         <AddTaskExtrasItems 
                           label = {'Preceeding tasks:'}
                           items = {state.preceedingTasks.current}
+                          onClickItem = {()=>{}}
                           shiftIDs = {true}
                           onShiftItems = {ResetCurrentPreceedingTasks}
                           onRemoveItem = {ResetCurrentPreceedingTasks}
@@ -232,6 +241,7 @@ return (
                         <AddTaskExtrasItems 
                           label = {'Succeeding tasks:'}
                           items = {state.succeedingTasks}
+                          onClickItem = {()=>{}}
                         />
                         
                     </section>

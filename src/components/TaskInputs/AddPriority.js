@@ -12,14 +12,14 @@ const AddPriority = ({priority_levels, priority, onChange, insertError=false}) =
              
                 return (
                     <span className="radio__container" key={`span${key+1}`}>
-                    <input 
-                        defaultChecked={key === Number(priority)}
-                        type="radio" 
-                        id={`priority${key+1}`} 
-                        name="priority" 
-                        value={key} 
-                        onChange={e => {onChange(e.target.value)}}/>
-                    <label htmlFor={`priority${key+1}`}>{level}</label>
+                      <input 
+                          defaultChecked={key === Number(priority)}
+                          type="radio" 
+                          id={`priority${key+1}`} 
+                          name="priority" 
+                          value={key} 
+                          onChange={e => {onChange(e.target.value)}}/>
+                      <label htmlFor={`priority${key+1}`}>{level}</label>
                     </span>
                 )
             }
