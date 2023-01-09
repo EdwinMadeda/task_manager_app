@@ -3,7 +3,13 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { BsChevronCompactDown, BsChevronCompactUp } from 'react-icons/bs';
 import { format } from "date-fns";
 
-const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask=false, searchText = ''}) => {
+const Task = ({
+  task, 
+  onDelete, 
+  onToggleEdit, 
+  onToggleReminder, 
+  onToggleViewTask, 
+  searchText = ''}) => {
 
    const day_task = format(new Date(task.day), 'do MMM, yyyy - p');
    const targetToggleReminder = (e)=>{
@@ -32,6 +38,12 @@ const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask=false, 
    const subTasksCount = Object.keys(subTasks).length;
    const [visible, setVisible] = useState(false);
 
+  //  const onToggleView = ()=>{
+  //     const taskId = parentTaskID? parentTaskID: task.id;
+  //     onToggleEdit(taskId);
+  //     setIsViewTask(true);
+  //  }
+
    useEffect(()=>{
       setVisible(searchSubTasks.length > 0);
    },[searchSubTasks.length])
@@ -41,9 +53,12 @@ const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask=false, 
     <div className={`task ${task.reminder? 'reminder': ''}`}>
         
         <FaEdit className='editBtn' onClick={()=>{onToggleEdit(task.id)}} title='edit task'/>
-        <div className='task__body'>
-
-             <h3 onDoubleClick={targetToggleReminder}>{task.text}</h3>
+        <div>
+             <div className='text-label'> 
+                <h3 onDoubleClick={targetToggleReminder}>{task.text}</h3>
+                <a className='moreBtn'
+                   onClick={()=> onToggleViewTask(task.id)}>...more</a>
+             </div>
              <p className='dayTimeText'>{`Day & Time: ${day_task}`}</p>
           
             {subTasksCount > 0 && 
@@ -66,8 +81,7 @@ const Task = ({task, onDelete, onToggleEdit, onToggleReminder, isSubtask=false, 
                     onDelete={()=>onDelete({taskId: task.id, subTaskId: subtask.id})}
                     onToggleEdit={()=>onToggleEdit({taskId: task.id, subTaskId: subtask.id})}
                     onToggleReminder={()=>onToggleReminder({taskId: task.id, subTaskId: subtask.id})}
-
-                    isSubtask = {true}
+                    onToggleViewTask = {()=>onToggleViewTask({taskId: task.id, subTaskId: subtask.id})}
                     />
                 ))}
               </>}

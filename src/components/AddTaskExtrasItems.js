@@ -1,9 +1,17 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import { FaTrash } from "react-icons/fa";
 import { BsArrowUpShort, BsArrowDownShort, BsChevronCompactUp, BsChevronCompactDown } from "react-icons/bs";
 
-const AddTaskExtrasItems = ({label, items, onClickItem, initialTargetID=false, markTarget = null, onRemoveItem = false, onShiftItems = false, shiftIDs = false})=>{
-  
+const AddTaskExtrasItems = ({
+  label, 
+  items, 
+  onClickItem, 
+  initialTargetID=false, 
+  markTarget = null, 
+  onRemoveItem = false, 
+  onShiftItems = false, 
+  isViewTask = false})=>{
+
   const [showItems, setShowItems] = useState(true);
   const [targetItemID, setTargetItemID] = useState(initialTargetID);
   
@@ -46,7 +54,7 @@ const AddTaskExtrasItems = ({label, items, onClickItem, initialTargetID=false, m
                     {items.map(item => (
                       <li key={item.id}>
                         <div>
-                          {onShiftItems && items.length > 1 &&
+                          {onShiftItems && !isViewTask && items.length > 1 &&
                             <span className="itemSortBtns">
 
                               {items.indexOf(item) > 0 &&
@@ -67,7 +75,7 @@ const AddTaskExtrasItems = ({label, items, onClickItem, initialTargetID=false, m
                                 onClick={()=> onTargetItemClick(item)}>{item.text}
                             </span>
                         </div>
-                        {onRemoveItem && <FaTrash
+                        {onRemoveItem && !isViewTask && <FaTrash
                               title='remove' 
                               className='removeItemBtn'
                               onClick={()=> onRemoveItemClick(item)}/>

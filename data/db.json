@@ -5,7 +5,7 @@
       "text": "Cook Breakfast",
       "day": "2022-11-08T00:23",
       "reminder": true,
-      "durationHrs": 0,
+      "durationHrs": "1",
       "durationMin": 0,
       "priority": "1",
       "subtasks": [
@@ -87,12 +87,13 @@
     {
       "id": 3,
       "text": "Fetch exercise pants",
-      "day": "2022-12-27T10:59:10.635Z",
+      "day": "2023-01-18T23:12",
       "reminder": false,
       "durationHrs": 0,
       "durationMin": 0,
       "priority": null,
-      "subtasks": []
+      "subtasks": [],
+      "preceedingTaskIDs": []
     },
     {
       "id": 4,
@@ -101,7 +102,9 @@
       "reminder": false,
       "durationHrs": 0,
       "durationMin": 0,
-      "subtasks": []
+      "priority": "3",
+      "subtasks": [],
+      "preceedingTaskIDs": []
     },
     {
       "id": 5,

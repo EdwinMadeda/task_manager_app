@@ -1,7 +1,7 @@
 
 import Task from "./Task";
 
-const Tasks = ({tasks, searchText, onDelete, onToggleEdit, onToggleReminder}) => {
+const Tasks = ({tasks, searchText, onDelete, onToggleEdit, onToggleReminder, onToggleViewTask}) => {
  
   const filterSearch = (mytasks)=>{
     const searchItem = (item)=>{
@@ -27,6 +27,7 @@ const Tasks = ({tasks, searchText, onDelete, onToggleEdit, onToggleReminder}) =>
               onDelete={onDelete}
               onToggleEdit={onToggleEdit}
               onToggleReminder={onToggleReminder}
+              onToggleViewTask={onToggleViewTask}
               searchText = {searchText}
             />
         ))}

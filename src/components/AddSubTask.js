@@ -16,7 +16,8 @@ import AddSubmitBtn from "./TaskInputs/AddSubmitBtn";
     editTargetSubTask = null, 
     subTaskSubmit, 
     setSubTaskSubmit,
-    backTaskBtnClick}) => {
+    backTaskBtnClick,
+    isViewTask = false}) => {
       
   const initialState = {
     subTask : {},
@@ -112,28 +113,35 @@ import AddSubmitBtn from "./TaskInputs/AddSubmitBtn";
               label={`SubTask ${state.currSubTaskID}`} 
               value={state.text} 
               onChange={inputVal => dispatch({type: 'setText', payload: {text: inputVal}})} 
+              disabled={isViewTask}
           />
 
           <AddDayTime 
               value={state.day} 
-              onChange={inputVal => dispatch({type: 'setDay', payload: {day : inputVal}})}/>
+              onChange={inputVal => dispatch({type: 'setDay', payload: {day : inputVal}})}
+              disabled={isViewTask}/>
 
           <AddDuration 
               valueHrs={state.durationHrs} 
               valueMin={state.durationMin} 
               onChangeHrs={inputVal => dispatch({type: 'setDurationHrs', payload: {durationHrs: inputVal}})} 
-              onChangeMin={inputVal => dispatch({type: 'setDurationMin', payload: {durationMin: inputVal}})}/>
+              onChangeMin={inputVal => dispatch({type: 'setDurationMin', payload: {durationMin: inputVal}})}
+              disabled={isViewTask}/>
 
           <AddPriority 
               priority_levels={priority_levels} 
               priority={state.priority} 
-              onChange={inputVal => dispatch({type: 'setPriority', payload: {priority: inputVal}})}/>
+              onChange={inputVal => dispatch({type: 'setPriority', payload: {priority: inputVal}})}
+              disabled={isViewTask}/>
 
           <AddReminder 
               value={state.reminder} 
-              onChange={inputVal => dispatch({type: 'setReminder', payload : {reminder: inputVal}})}/>
+              onChange={inputVal => dispatch({type: 'setReminder', payload : {reminder: inputVal}})}
+              disabled={isViewTask}/>
 
-          <AddSubmitBtn value={"Save Sub Task"}/>
+          {!isViewTask && 
+          <AddSubmitBtn value={"Save Sub Task"}/>}
+          
       </form>
     }
     </>

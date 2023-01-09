@@ -20,6 +20,7 @@ function App() {
 
   const [editTargetTask, setEditTargetTask] = useState(null);
   const [editTargetSubTask, setEditTargetSubTask] = useState(null);
+  const [isViewTask, setIsViewTask] = useState(false);
 
   const URL = 'http://localhost:3500/tasks';
 
@@ -192,9 +193,15 @@ function App() {
 
   const toggleAddBtnClick = ()=>{
     setIsSearch(false)
+    setIsViewTask(false);
     setAddTaskForm(!addTaskForm);
     !addTaskForm && setEditTargetTask(null);
   }
+
+  const toggleViewTask = (taskId)=>{
+    toggleEdit(taskId);
+    setIsViewTask(true);
+ }
 
   return ( 
 
@@ -208,10 +215,11 @@ function App() {
                         allTasks={editTargetTask? tasks.filter(task => editTargetTask.id !== task.id): tasks}
                         editTargetTask = {editTargetTask}
                         editTargetSubTask = {editTargetSubTask}
-                        setEditTargetSubTask = {setEditTargetSubTask}
+                        isViewTask = {isViewTask}
                         onAdd={addTask} 
                         onEdit={editTask}
-                    />}
+                        onToggleViewTask={toggleViewTask}
+                      />}
 
       {isSearch && <SearchTask  
                               searchText={searchText}
@@ -227,7 +235,8 @@ function App() {
                 searchText={searchText}
                 onDelete={deleteTask} 
                 onToggleEdit = {toggleEdit}
-                onToggleReminder={toggleReminder} />
+                onToggleReminder={toggleReminder}
+                onToggleViewTask={toggleViewTask} />
           ) : (
             
             <p style={styleEffectRun}>{isLoading ? `Loading....` : (

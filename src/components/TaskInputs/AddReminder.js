@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AddReminder = ({value, onChange, insertError = false}) => {
+const AddReminder = ({value, onChange, insertError = false, disabled = false}) => {
   return (
     <div className=' form-control-check'>
         <label htmlFor="add_reminder">
@@ -8,7 +8,7 @@ const AddReminder = ({value, onChange, insertError = false}) => {
           {insertError && <p className='errorMsg'>{insertError}</p>}
         </label>
         <input type="checkbox" checked={value} value={value} id="add_reminder" 
-            onChange={e => onChange(e.currentTarget.checked)}/>
+            onChange={e => onChange(e.currentTarget.checked)} disabled={disabled}/>
     </div>
   )
 }

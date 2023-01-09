@@ -1,7 +1,7 @@
 import React from 'react'
 
-const AddTaskText = ({label, value, onChange, insertError=false}) => {
-
+const AddTaskText = ({label, value, onChange, insertError=false, disabled = false}) => {
+ 
   return (
     <div className='form-control'>
         <label htmlFor="add_task">
@@ -10,7 +10,7 @@ const AddTaskText = ({label, value, onChange, insertError=false}) => {
           </span>
         </label>
         <input type="text" id="add_task" placeholder={`Add ${label}`} value={value} 
-            onChange={e => onChange(e.target.value)}/>     
+            onChange={e => onChange(e.target.value)} disabled={disabled}/>     
     </div>
   )
 }

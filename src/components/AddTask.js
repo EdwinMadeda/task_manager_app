@@ -1,4 +1,5 @@
 import { useEffect, useReducer} from "react";
+import { BsToggle2On, BsToggle2Off} from "react-icons/bs";
 
 import AddTaskText from "./TaskInputs/AddTaskText";
 import AddDayTime from "./TaskInputs/AddDayTime";
@@ -15,7 +16,14 @@ import AddSubTask from "./AddSubTask";
 
 
 
-const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null, setEditTargetSubTask, onAdd, onEdit}) => {
+const AddTask = ({
+    allTasks, 
+    editTargetTask = null, 
+    editTargetSubTask = null, 
+    isViewTask = false, 
+    onToggleViewTask,
+    onAdd, 
+    onEdit}) => {
 
   const filterCurrentPreceedingTasks = (IDs) => allTasks.filter(task => IDs.includes(task.id));
   const filterPossiblePreceedingTasks = (IDs) => allTasks.filter(task => !IDs.includes(task.id));
@@ -49,6 +57,8 @@ const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null, set
     preceedingTasks : {current: [], possible: []}, 
     succeedingTasks : [], 
 
+    isViewTask : false,
+
    };
 
    const init = ()=>{
@@ -73,11 +83,11 @@ const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null, set
       }
       succeedingTasks  = filterSucceedingTasks();
       isSubTask = (editTargetSubTask !== null);
-
+      
     }
 
     const task = {id, text, day, reminder, durationHrs, durationMin, priority, subtasks : subTasks, preceedingTaskIDs}
-    return {...initialState, ...task, task, subTasks, preceedingTasks, succeedingTasks, targetSubTask : editTargetSubTask};
+    return {...initialState, ...task, task, subTasks, preceedingTasks, succeedingTasks, targetSubTask : editTargetSubTask, isViewTask, isSubTask};
 
   }
    
@@ -115,7 +125,8 @@ const AddTask = ({allTasks, editTargetTask = null, editTargetSubTask = null, set
 
           case 'setPreceedingTasksObj': return {...state, preceedingTasks : action.payload};
           case 'setIsPreceedingTasks' : return {...state, isPreceedingTasks : action.payload};
-         
+
+          case 'toggleEditMode' : return {...state, isViewTask: !state.isViewTask};
 
           case 'init': return init(); 
           case 'clearForm': return clearForm(state);      
@@ -204,12 +215,23 @@ const backTaskBtnClick =()=>{
 
 return (
     <>
+      {editTargetTask && isViewTask &&
+        <p className="toggleEditMode_wrapper">
+            <span>Edit mode</span>
+            <a className="toggleEditMode_btn"
+              onClick={() => dispatch({type : 'toggleEditMode'})}>
+              {state.isViewTask? <BsToggle2Off/> : <BsToggle2On/>}
+            </a>
+            <span>{state.isViewTask? 'OFF' : 'ON'}</span>
+        </p>
+      }
       <form className={`add-form Task`} onSubmit={submit}>
           <AddTaskText 
               label={`Task`} 
               value={state.text} 
               onChange={inputVal => dispatch({type: 'setText', payload: {text: inputVal}})} 
-              insertError={state.textError}/>
+              insertError={state.textError}
+              disabled = {state.isViewTask}/>
 
           {state.subTasks.length > 0 &&
               <section className="add_task_extras_items-wrapper subtasks">
@@ -220,7 +242,8 @@ return (
                       onShiftItems = {ResetSubTasks}
                       onRemoveItem = {ResetSubTasks}
                       initialTargetID = {state.targetSubTask !== null? state.targetSubTask.id: false}
-                      markTarget = {state.isSubTask} />
+                      markTarget = {state.isSubTask}
+                      isViewTask = {state.isViewTask} />
               </section>
             }
 
@@ -232,29 +255,33 @@ return (
                         <AddTaskExtrasItems 
                           label = {'Preceeding tasks:'}
                           items = {state.preceedingTasks.current}
-                          onClickItem = {()=>{}}
+                          onClickItem = {item =>{console.log(item)}}
                           shiftIDs = {true}
                           onShiftItems = {ResetCurrentPreceedingTasks}
                           onRemoveItem = {ResetCurrentPreceedingTasks}
+                          isViewTask = {state.isViewTask}
                         />
 
                         <AddTaskExtrasItems 
                           label = {'Succeeding tasks:'}
                           items = {state.succeedingTasks}
                           onClickItem = {()=>{}}
+                          isViewTask = {state.isViewTask}
                         />
                         
                     </section>
                 }
 
-                  <AddTaskExtrasBtns 
-                      setIsSubTask = {AddSubTaskBtnClick} 
-                      isPreceedingTasks = {state.isPreceedingTasks}
-                      setIsPreceedingTasks={()=>dispatch({type: "setIsPreceedingTasks", payload: !state.isPreceedingTasks})} 
-                      showPreceedingTasksBtn={true}
-                  />
+                  {!state.isViewTask && 
+                    <AddTaskExtrasBtns 
+                        setIsSubTask = {AddSubTaskBtnClick} 
+                        isPreceedingTasks = {state.isPreceedingTasks}
+                        setIsPreceedingTasks={()=>dispatch({type: "setIsPreceedingTasks", payload: !state.isPreceedingTasks})} 
+                        showPreceedingTasksBtn={true}
+                    />
+                  }
 
-                  {state.isPreceedingTasks &&
+                  {state.isPreceedingTasks && !state.isViewTask &&
                     <AddTaskExtrasItems 
                         label = {'Possible preceeding tasks:'}
                         items = {state.preceedingTasks.possible}
@@ -266,25 +293,33 @@ return (
 
                     <AddDayTime 
                       value={state.day} 
-                      onChange={inputVal => dispatch({type: 'setDay', payload: {day : inputVal}})}/>
+                      onChange={inputVal => dispatch({type: 'setDay', payload: {day : inputVal}})}
+                      disabled = {state.isViewTask}/>
+
                     <AddDuration 
                         valueHrs={state.durationHrs} 
                         valueMin={state.durationMin} 
                         onChangeHrs={inputVal => dispatch({type: 'setDurationHrs', payload: {durationHrs: inputVal}})} 
-                        onChangeMin={inputVal => dispatch({type: 'setDurationMin', payload: {durationMin: inputVal}})}/>
+                        onChangeMin={inputVal => dispatch({type: 'setDurationMin', payload: {durationMin: inputVal}})}
+                        disabled = {state.isViewTask}/>
+
                     <AddPriority 
                         priority_levels={priority_levels} 
                         priority={state.priority} 
-                        onChange={inputVal => dispatch({type: 'setPriority', payload: {priority: inputVal}})}/>
+                        onChange={inputVal => dispatch({type: 'setPriority', payload: {priority: inputVal}})}
+                        disabled = {state.isViewTask}/>
+
                     <AddReminder 
                         value={state.reminder} 
-                        onChange={inputVal => dispatch({type: 'setReminder', payload : {reminder: inputVal}})}/>
+                        onChange={inputVal => dispatch({type: 'setReminder', payload : {reminder: inputVal}})}
+                        disabled = {state.isViewTask}/>
+
+                    {!state.isViewTask && 
                     <AddSubmitBtn value={"Save Task"}/>
+                    }
               </>
             }
               
-           
-
       </form>
 
       {state.isSubTask && 
@@ -294,6 +329,7 @@ return (
             subTasks = {state.subTasks}
             editTargetSubTask={state.targetSubTask} 
             subTaskSubmit = {state.subTaskSubmit}
+            isViewTask={state.isViewTask}
             setSubTasks = {subTasks => dispatch({type : 'setSubTasks', payload : subTasks})}
             setSubTaskSubmit = {subTaskSubmit => dispatch({type: "setSubTaskSubmit", payload : {subTaskSubmit}})}
             backTaskBtnClick = {backTaskBtnClick}/>

@@ -123,10 +123,28 @@ body {
   border-left: 5px solid green;
 }
 
-.task h3 {
+.task .text-label{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.task .text-label h3 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.task .text-label .moreBtn{
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-size: 90%;
+  margin-left: 10px;
+}
+
+.task .text-label .moreBtn:hover{
+  color: green;
 }
 
 .task .dayTimeText{
@@ -149,6 +167,26 @@ body {
 .subTask{
   margin-top: 15px;
   border: 1.5px solid slateblue;
+}
+
+.toggleEditMode_wrapper{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.toggleEditMode_wrapper span{
+  margin:0 12px 0 2px;
+}
+.toggleEditMode_btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+.toggleEditMode_btn:hover{
+  cursor: pointer;
 }
 
 .add-form {
@@ -300,6 +338,10 @@ body {
   font-size: 17px;
 }
 
+.form-control input:disabled{
+  color: #000;
+}
+
 .form-control .addDuration{
   display: flex;
   justify-content: flex-start;
@@ -308,6 +350,8 @@ body {
 
 .form-control .addDuration input{
   width: 60px;
+  border: none;
+  outline: none;
 }
 
 .form-control input[type="radio"]{
