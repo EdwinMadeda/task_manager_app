@@ -8,14 +8,15 @@ const Tasks = ({tasks, searchText, onDelete, onToggleEdit, onToggleReminder, onT
        return item.toLowerCase().includes(searchText.toLowerCase());
     }
     
-    return mytasks.filter(task => {
+    return mytasks.map(task => {
        
           const searchResult = searchItem(task.text);
           const subtasks = task.subtasks === undefined? []: 
                           task.subtasks.filter(subtask => searchItem(subtask.text));
-              
-          if(subtasks.length > 0 || searchResult) return {...task, subtasks};
-   });
+          
+          return subtasks.length > 0 || searchResult? {...task, subtasks} : {};
+          
+   }).filter(item => item.id !== undefined);
  }
   
   return (
