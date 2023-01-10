@@ -140,6 +140,9 @@ body {
   justify-content: space-between;
   font-size: 90%;
   margin-left: 10px;
+  outline: none;
+  border: none;
+  background: transparent;
 }
 
 .task .text-label .moreBtn:hover{

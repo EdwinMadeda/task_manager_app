@@ -56,8 +56,8 @@ const Task = ({
         <div>
              <div className='text-label'> 
                 <h3 onDoubleClick={targetToggleReminder}>{task.text}</h3>
-                <a className='moreBtn'
-                   onClick={()=> onToggleViewTask(task.id)}>...more</a>
+                <button className='moreBtn'
+                   onClick={()=> onToggleViewTask(task.id)}>...more</button>
              </div>
              <p className='dayTimeText'>{`Day & Time: ${day_task}`}</p>
           
