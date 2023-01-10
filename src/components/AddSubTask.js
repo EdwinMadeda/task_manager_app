@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { BsFillBackspaceFill } from "react-icons/bs";
 
 import AddTaskText from "./TaskInputs/AddTaskText";
@@ -14,8 +14,6 @@ import AddSubmitBtn from "./TaskInputs/AddSubmitBtn";
     subTasks, 
     setSubTasks, 
     editTargetSubTask = null, 
-    subTaskSubmit, 
-    setSubTaskSubmit,
     backTaskBtnClick,
     isViewTask = false}) => {
       
@@ -79,8 +77,14 @@ import AddSubmitBtn from "./TaskInputs/AddSubmitBtn";
 
         case 'init': return init(); 
         case 'clearForm': return clearForm(state); 
+
+        default: return state;
     }
   }
+
+  useEffect(()=>{
+     dispatch({type: 'init'})
+  }, [editTargetSubTask]);
 
   const submit = (e)=>{
         e.preventDefault();
@@ -93,16 +97,17 @@ import AddSubmitBtn from "./TaskInputs/AddSubmitBtn";
         }
       
         setSubTasks(newSubTasks);
-        setSubTaskSubmit(true);
+        backTaskBtnClick();
         clearForm();
-
+        
   }
 
   const [state, dispatch] = useReducer(reducer, initialState, init);
+  const subTaskNo = editTargetSubTask? subTasks.indexOf(editTargetSubTask)+1: state.currSubTaskID;
+
 
   return (
     <>  
-    {!subTaskSubmit && 
       <form className={`add-form subTask`} onSubmit={submit}>
         
           <BsFillBackspaceFill 
@@ -110,7 +115,7 @@ import AddSubmitBtn from "./TaskInputs/AddSubmitBtn";
             onClick={backTaskBtnClick}/>
 
           <AddTaskText 
-              label={`SubTask ${state.currSubTaskID}`} 
+              label={`SubTask ${subTaskNo}`} 
               value={state.text} 
               onChange={inputVal => dispatch({type: 'setText', payload: {text: inputVal}})} 
               disabled={isViewTask}
@@ -141,9 +146,8 @@ import AddSubmitBtn from "./TaskInputs/AddSubmitBtn";
 
           {!isViewTask && 
           <AddSubmitBtn value={"Save Sub Task"}/>}
-          
       </form>
-    }
+    
     </>
 
   )

@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef} from "react";
+import { useReducer , useRef} from "react";
 import { BsToggle2On, BsToggle2Off} from "react-icons/bs";
 import { AiFillForward } from "react-icons/ai";
 
@@ -50,7 +50,7 @@ const AddTask = ({
     subTasks : [], 
     isSubTask : false,
     targetSubTask : null, 
-    subTaskSubmit : false,
+  
   
     isPreceedingTasks : false,
     preceedingTaskIDs : [], 
@@ -118,10 +118,6 @@ const AddTask = ({
 
           case 'setTargetSubtask' : return {...state, targetSubTask: action.payload};
           case 'setIsSubTask' : return {...state, isSubTask: action.payload}; 
-          case 'setSubTaskSubmit' : 
-
-          
-              return {...state, subTaskSubmit: action.payload};
 
           case 'setPreceedingTasksObj': return {...state, preceedingTasks : action.payload};
           case 'setIsPreceedingTasks' : return {...state, isPreceedingTasks : action.payload};
@@ -134,7 +130,9 @@ const AddTask = ({
           }
 
           case 'init': return init(); 
-          case 'clearForm': return clearForm(state);      
+          case 'clearForm': return clearForm(state);    
+          
+          default: return state;
        }
 
    };
@@ -147,21 +145,7 @@ const AddTask = ({
     "Urgent, but not important",
     "Neither urgent nor important"
   ];
-
-  useEffect(()=>{
-
-    (state.targetSubTask) && AddSubTaskBtnClick();
-    (state.subTasks.length > 0 && state.subTaskSubmit) && backTaskBtnClick();
-    
-  }, [state.subTaskSubmit])
-
-  const submit = e =>{
-    e.preventDefault();
-    editTargetTask? onEdit(state.task) : onAdd(state.task);
-    dispatch({type : 'clearForm'});
-    
-  }
-
+   
   const ResetSubTasks = (subTasks) =>{
      dispatch({type : 'setSubTasks', payload : subTasks});
   }
@@ -204,9 +188,10 @@ const AddPreceedingTaskBtnClick = (preceedingItem) =>{
  const AddSubTaskBtnClick = (targetSubTask = state.targetSubTask)=>{
      
       if(state.text !== '' || (editTargetTask && state.targetSubTask)){ 
-       
+ 
         dispatch({type : "setTargetSubtask", payload: targetSubTask});
         dispatch({type : "setIsSubTask", payload: true});
+       
         return;
       }
       dispatch({type: "setTextError", payload: 'Field cannot be empty'});
@@ -216,6 +201,14 @@ const AddPreceedingTaskBtnClick = (preceedingItem) =>{
 const backTaskBtnClick =()=>{
   dispatch({type: "setIsSubTask", payload: false});
   dispatch({type : "setTargetSubtask", payload: null});
+}
+
+
+const submit = e =>{
+  e.preventDefault();
+  editTargetTask? onEdit(state.task) : onAdd(state.task);
+  dispatch({type : 'clearForm'});
+  
 }
 
 return (
@@ -231,7 +224,8 @@ return (
           <p className="toggleEditMode_btns">
               <span>Edit mode</span>
               <a className="toggleEditMode_btn"
-                onClick={() => dispatch({type : 'toggleEditMode'})}>
+                onClick={() => dispatch({type : 'toggleEditMode'})}
+                href>
                 {state.isViewTask? <BsToggle2Off/> : <BsToggle2On/>}
               </a>
               <span>{state.isViewTask? 'OFF' : 'ON'}</span>
@@ -342,10 +336,8 @@ return (
             priority_levels={priority_levels} 
             subTasks = {state.subTasks}
             editTargetSubTask={state.targetSubTask} 
-            subTaskSubmit = {state.subTaskSubmit}
             isViewTask={state.isViewTask}
             setSubTasks = {subTasks => dispatch({type : 'setSubTasks', payload : subTasks})}
-            setSubTaskSubmit = {subTaskSubmit => dispatch({type: "setSubTaskSubmit", payload : {subTaskSubmit}})}
             backTaskBtnClick = {backTaskBtnClick}/>
         </>
       }
