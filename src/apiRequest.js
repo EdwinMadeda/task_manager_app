@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const apiRequest = async (URL, options = {method: 'GET'}, handleLoading = false) => {
     
     let errMsg = null, result = [], loading;

@@ -223,11 +223,12 @@ return (
 
           <p className="toggleEditMode_btns">
               <span>Edit mode</span>
-              <a className="toggleEditMode_btn"
-                onClick={() => dispatch({type : 'toggleEditMode'})}
-                href>
-                {state.isViewTask? <BsToggle2Off/> : <BsToggle2On/>}
-              </a>
+              <button 
+                className="toggleEditMode_btn"
+                onClick={() => dispatch({type : 'toggleEditMode'})}>
+                 {state.isViewTask? <BsToggle2Off/> : <BsToggle2On/>}
+              </button>
+            
               <span>{state.isViewTask? 'OFF' : 'ON'}</span>
           </p>
 

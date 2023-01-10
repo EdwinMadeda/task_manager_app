@@ -197,6 +197,9 @@ body {
   justify-content: center;
   align-items: center;
   font-size: 20px;
+  border: none;
+  outline: none;
+  background: transparent;
 }
 
 .toggleEditMode_btn:hover{

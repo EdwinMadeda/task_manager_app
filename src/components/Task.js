@@ -16,15 +16,15 @@ const Task = ({
       const editBtn = document.getElementsByClassName('editBtn')[0];
       !editBtn.contains(e.target) && onToggleReminder(task.id);
    }
-   const duration = (
-        task.durationHrs !==0 && task.durationMin !==0? (
-          `${task.durationHrs} hr ${task.durationMin} min`
-        ) : (
-          task.durationHrs !==0 && task.durationMin ===0? `${task.durationHrs} hr` : (
-            task.durationHrs ===0 && task.durationMin !==0? `${task.durationMin} min` : ''
-          )
-        )
-    );
+  //  const duration = (
+  //       task.durationHrs !==0 && task.durationMin !==0? (
+  //         `${task.durationHrs} hr ${task.durationMin} min`
+  //       ) : (
+  //         task.durationHrs !==0 && task.durationMin ===0? `${task.durationHrs} hr` : (
+  //           task.durationHrs ===0 && task.durationMin !==0? `${task.durationMin} min` : ''
+  //         )
+  //       )
+  //   );
 
     const searchSubTasks = (task.subtasks || []).filter(subtask => {
       const isSearchItem = (item)=>{
