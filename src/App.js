@@ -22,7 +22,9 @@ function App() {
   const [editTargetSubTask, setEditTargetSubTask] = useState(null);
   const [isViewTask, setIsViewTask] = useState(false);
 
-  const URL = 'http://localhost:3500/tasks';
+  // const URL = 'http://localhost:3500/tasks';
+
+  const URL = 'https://rose-dorian-supply.glitch.me/tasks';
 
   const effectRan = useRef(false);
 
